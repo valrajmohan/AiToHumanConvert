@@ -353,7 +353,7 @@ body.loading .overlay {
         for (const word of words) {
             
 			if (word.length > 3) {
-				const processedWord1 = await processTextLogic3(word);
+				const processedWord1 = word;
 				processedWords.push(processedWord1);
 			} else {
 				processedWords.push(word);
