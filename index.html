@@ -349,13 +349,22 @@ body.loading .overlay {
 
     const words = inputText.split(/\s+/); // Split input text into words
     let processedWords = [];
-
+	const wordsData = await fetchWordsData();
+	
     try {
         for (const word of words) {
             
 			if (word.length > 3) {
-				const processedWord1 = word;
-				processedWords.push(processedWord1);
+				if (wordsData.hasOwnProperty(word)) {
+					const alternatives = wordsData[word];
+					const randomIndex = Math.floor(Math.random() * alternatives.length);
+					const processedWord1 = alternatives[randomIndex];;
+					processedWords.push(processedWord1);
+				}else{
+				
+				 processedWords.push(word);
+				 
+				}
 			} else {
 				processedWords.push(word);
 			}
@@ -382,6 +391,22 @@ body.loading .overlay {
 });
 
 
+	async function fetchWordsData() {
+		try {
+			const response = await fetch('images/wordsData.json');
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const wordsData = await response.json();
+			return wordsData; // Return the parsed JSON
+		} catch (error) {
+			console.error('Error fetching words data:', error);
+			showWarningToast("An error occurred while loading the words data.");
+			return {}; // Return an empty object if there's an error
+		}
+	}
+
+
     function copyText() {
         var outputText = document.getElementById("outputText");
         outputText.select();
@@ -393,6 +418,15 @@ body.loading .overlay {
             showWarningToast("Failed to copy text: " + error);
         });
     }
+	
+	function getRandomWordFromArray(word) {
+    if (wordsData.hasOwnProperty(word)) {
+        const alternatives = wordsData[word];
+        const randomIndex = Math.floor(Math.random() * alternatives.length); // Random index between 0 and length-1
+        return alternatives[randomIndex]; // Return the randomly selected alternative
+    }
+    return word; // If word is not found, return the original word
+}
 
     function showWarningToast(message) {
         Toastify({
