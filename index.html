@@ -393,7 +393,7 @@ body.loading .overlay {
 
 	async function fetchWordsData() {
 		try {
-			const response = await fetch('images/wordsData.json');
+			const response = await fetch('/images/wordsData.json');
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}
